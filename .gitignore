@@ -1,0 +1,73 @@
+# ──────────────────────────────
+# Environment / secrets
+# ──────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ──────────────────────────────
+# Frontend (Node / Vite)
+# ──────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+
+# ──────────────────────────────
+# Backend (Python / FastAPI)
+# ──────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+backend/.venv/
+backend/venv/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+.cache/
+*.egg
+
+# ──────────────────────────────
+# Database / uploads / data / checkpoints
+# ──────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.bak
+*.bak.*
+*.log
+temp/
+
+# Local uploaded files (keep directories via .gitkeep)
+backend/uploads/*
+!backend/uploads/.gitkeep
+uploads/*
+!uploads/.gitkeep
+
+# Local extracted text files
+backend/extracted_text/*
+!backend/extracted_text/.gitkeep
+extracted_text/*
+!extracted_text/.gitkeep
+
+# Local document metadata and checkpoints
+backend/data/*
+!backend/data/.gitkeep
+data/*
+!data/.gitkeep
+
+# ──────────────────────────────
+# OS / Editor artefacts
+# ──────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
