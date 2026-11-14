@@ -165,7 +165,7 @@ def extract_document_text(document_id: str):
             detail=f"Document '{document_id}' not found.",
         )
 
-    file_path = doc.get("file_path")
+    file_path = document_service.get_document_file_path(doc) or doc.get("file_path")
     if not file_path or not os.path.exists(file_path):
         raise HTTPException(
             status_code=status.HTTP_410_GONE,
@@ -600,7 +600,7 @@ def download_document(document_id: str):
             detail=f"Document '{document_id}' not found.",
         )
 
-    file_path = doc.get("file_path")
+    file_path = document_service.get_document_file_path(doc) or doc.get("file_path")
     # 1. If file exists on local filesystem, stream it directly
     if file_path and os.path.exists(file_path):
         return FileResponse(

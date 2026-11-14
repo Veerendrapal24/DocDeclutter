@@ -17,10 +17,11 @@ app = FastAPI(
 )
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
+# Allows local dev, any Vercel deployment (*.vercel.app), and custom domains from ALLOWED_ORIGINS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,
-    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$|^https://[a-zA-Z0-9_\-\.]+\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -38,3 +39,11 @@ def root():
 @app.get("/api/health", tags=["Health"])
 def health():
     return {"status": "healthy"}
+
+
+if __name__ == "__main__":
+    import os
+    import uvicorn
+
+    server_port = int(os.environ.get("PORT", getattr(settings, "port", 8000)))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=server_port, reload=False)

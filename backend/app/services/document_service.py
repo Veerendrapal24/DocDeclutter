@@ -16,6 +16,7 @@ from typing import Dict, List, Optional
 from app.schemas.document import DocumentStatus
 from app.services.supabase_service import supabase_service
 
+BACKEND_BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 logger = logging.getLogger("docdeclutter.service")
 
 
@@ -25,6 +26,18 @@ class DocumentService:
         storage_file: str = "data/documents.json",
         upload_dir: str = "uploads",
     ):
+        if not os.path.isabs(storage_file):
+            if not os.path.exists(storage_file) and os.path.exists(os.path.join(BACKEND_BASE_DIR, storage_file)):
+                storage_file = os.path.join(BACKEND_BASE_DIR, storage_file)
+            elif not os.path.exists(storage_file):
+                storage_file = os.path.join(BACKEND_BASE_DIR, storage_file)
+
+        if not os.path.isabs(upload_dir):
+            if not os.path.exists(upload_dir) and os.path.exists(os.path.join(BACKEND_BASE_DIR, upload_dir)):
+                upload_dir = os.path.join(BACKEND_BASE_DIR, upload_dir)
+            elif not os.path.exists(upload_dir):
+                upload_dir = os.path.join(BACKEND_BASE_DIR, upload_dir)
+
         self.storage_file = storage_file
         self.upload_dir = upload_dir
         self._store: Dict[str, dict] = {}
@@ -80,6 +93,25 @@ class DocumentService:
         if not target.startswith(base + os.sep) and target != base:
             raise ValueError("Path traversal detected.")
         return target
+
+    def get_document_file_path(self, doc: dict) -> Optional[str]:
+        """Resolve actual verified path on disk for a document's file."""
+        stored_name = doc.get("stored_filename")
+        if stored_name:
+            try:
+                p = self._resolve_upload_path(stored_name)
+                if os.path.exists(p):
+                    return p
+            except Exception:
+                pass
+        raw_path = doc.get("file_path")
+        if raw_path and os.path.exists(raw_path):
+            return raw_path
+        if raw_path and not os.path.isabs(raw_path):
+            alt_path = os.path.join(BACKEND_BASE_DIR, raw_path)
+            if os.path.exists(alt_path):
+                return alt_path
+        return None
 
     # ------------------------------------------------------------------
     # Public API

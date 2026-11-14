@@ -3,7 +3,8 @@ import axios from 'axios'
 /**
  * Axios instance configured to communicate directly with FastAPI backend at http://127.0.0.1:8000.
  */
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
+export const API_BASE_URL = rawBaseUrl.replace(/\/+$/, '')
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,
@@ -30,7 +31,7 @@ api.interceptors.response.use(
         message = `Server responded with status ${error.response.status}: ${error.response.statusText}`
       }
     } else if (error.request) {
-      message = 'Cannot connect to backend server. Please ensure FastAPI is running at http://127.0.0.1:8000.'
+      message = `Cannot connect to backend server. Please ensure the backend is running at ${API_BASE_URL}.`
     } else if (error.message) {
       message = error.message
     }

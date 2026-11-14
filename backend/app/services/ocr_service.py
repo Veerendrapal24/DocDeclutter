@@ -22,6 +22,9 @@ import pytesseract
 from app.core.config import settings
 
 
+BACKEND_BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
 class OCRError(Exception):
     """Custom exception raised during text extraction failure."""
     pass
@@ -32,6 +35,12 @@ class OCRService:
         self,
         extracted_text_dir: str = "extracted_text",
     ):
+        if not os.path.isabs(extracted_text_dir):
+            if not os.path.exists(extracted_text_dir) and os.path.exists(os.path.join(BACKEND_BASE_DIR, extracted_text_dir)):
+                extracted_text_dir = os.path.join(BACKEND_BASE_DIR, extracted_text_dir)
+            elif not os.path.exists(extracted_text_dir):
+                extracted_text_dir = os.path.join(BACKEND_BASE_DIR, extracted_text_dir)
+
         self.extracted_text_dir = extracted_text_dir
         os.makedirs(self.extracted_text_dir, exist_ok=True)
         self._tesseract_path: Optional[str] = None

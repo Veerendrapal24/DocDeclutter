@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     app_env: str = "development"
     debug: bool = True
     secret_key: str = "change_me"
+    port: int = 8000
 
     # CORS – accepts JSON list or comma-separated URLs
     allowed_origins: Union[list[str], str] = ["http://localhost:5173", "http://127.0.0.1:5173"]

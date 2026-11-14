@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+data/*.sqlite*
+data/*.json*
+data/*.bak*
+uploads/*
+!uploads/.gitkeep
+extracted_text/*
+!extracted_text/.gitkeep
+.git/
+.gitignore
